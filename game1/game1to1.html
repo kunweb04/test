@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识大挑战 - 游戏中</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="countdown">5</div>
+        <div id="question-container">
+            <p id="question-text">加载中...</p>
+            <input type="text" id="answer-input" placeholder="输入你的答案">
+            <button id="submit-answer">提交答案</button>
+        </div>
+        <div id="timer" style="display:none;">时间：--</div>
+        <div id="score" style="display:none;">得分：--</div>
+        <div id="result-container">
+            <h2>游戏结束</h2>
+            <p id="final-score">你的最终得分是：0</p>
+            <button class="retry-button" onclick="window.location.reload()">重新开始</button>
+            <button class="home-button" onclick="window.location.href='index.html'">返回首页</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>

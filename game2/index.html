@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反应速度测试游戏</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #0f0f3d;
+            color: #fff;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background-color: rgba(30, 30, 60, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: #00ff99;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #game-box {
+            margin-top: 20px;
+        }
+
+        #color-box {
+            width: 100%;
+            height: 200px;
+            background-color: #1b1b4f;
+            margin: 20px 0;
+            border-radius: 20px;
+            border: 2px solid #00ff99;
+            box-shadow: inset 0 0 15px rgba(0, 255, 153, 0.3);
+            transition: background-color 0.5s ease;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #00ff99;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 255, 153, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00cc77;
+            box-shadow: 0 6px 20px rgba(0, 255, 153, 0.7);
+            transform: translateY(-3px);
+        }
+
+        #click-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        #instruction {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>反应速度测试</h1>
+        <div id="game-box">
+            <p id="instruction">点击“开始游戏”，准备好后尽快点击！</p>
+            <div id="color-box"></div>
+            <button id="start-btn" onclick="startGame()">开始游戏</button>
+            <button id="click-btn" onclick="handleClick()" disabled>点击!</button>
+        </div>
+        <div id="result">结果: - 秒</div>
+    </div>
+
+    <script>
+        let startTime, endTime;
+        let isGameStarted = false;
+
+        function startGame() {
+            const colorBox = document.getElementById('color-box');
+            const clickBtn = document.getElementById('click-btn');
+            const instruction = document.getElementById('instruction');
+            
+            instruction.textContent = "准备好！等待颜色变化...";
+            clickBtn.disabled = true;
+            
+            let randomDelay = Math.random() * 3000 + 2000; // 随机2到5秒
+            
+            setTimeout(() => {
+                colorBox.style.backgroundColor = 'green';
+                instruction.textContent = "现在点击!";
+                startTime = new Date().getTime();
+                clickBtn.disabled = false;
+                isGameStarted = true;
+            }, randomDelay);
+        }
+
+        function handleClick() {
+            if (!isGameStarted) return;
+            
+            endTime = new Date().getTime();
+            let reactionTime = (endTime - startTime) / 1000; // 转换为秒
+            document.getElementById('result').textContent = `结果: ${reactionTime} 秒`;
+            
+            resetGame();
+        }
+
+        function resetGame() {
+            const colorBox = document.getElementById('color-box');
+            const clickBtn = document.getElementById('click-btn');
+            const instruction = document.getElementById('instruction');
+            
+            colorBox.style.backgroundColor = '#1b1b4f';
+            instruction.textContent = "点击“开始游戏”，准备好后尽快点击！";
+            clickBtn.disabled = true;
+            isGameStarted = false;
+        }
+    </script>
+</body>
+</html>
