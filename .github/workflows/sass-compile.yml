@@ -1,0 +1,25 @@
+name: Compile SCSS
+
+on:
+  push:
+    branches:
+      - main  # 监听主分支的推送事件
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Sass
+      run: npm install -g sass
+    - name: Compile SCSS to CSS
+      run: sass index.scss:index.css
+    - name: Commit CSS
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add index.css
+        git commit -m "Auto-compile SCSS to CSS"
+        git push
