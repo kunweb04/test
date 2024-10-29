@@ -1,8 +1,7 @@
 const questions = [
     { question: "我是谁？", answer: "oho" },
     { question: "我的生日？", answer: "4月17日" },
-    { question: "我是什么网页工程师？", answer: "前段网页工程师" },
-    // 更多问题...
+    { question: "我是什么类型的网页工程师？", answer: "前段网页工程师" },
 ];
 
 let currentQuestionIndex = 0;
