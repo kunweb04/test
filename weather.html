@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>马六甲天气</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .weather-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <h1>马六甲天气</h1>
+        <p id="temperature">温度: 加载中...</p>
+        <p id="humidity">湿度: 加载中...</p>
+        <p id="wind">风向: 加载中...</p>
+        <p id="pressure">气压: 加载中...</p>
+        <p id="uv">紫外线指数: 加载中...</p>
+    </div>
+
+    <script>
+        async function fetchWeather() {
+            const apiKey = 'a8180c40e5a34daebeabe6b8310ec4d4'; // 替换为你的API密钥
+            const location = '马六甲';
+            
+            // 获取城市ID
+            const geoResponse = await fetch(`https://geoapi.qweather.com/v2/city/lookup?location=${location}&key=${apiKey}`);
+            const geoData = await geoResponse.json();
+            if (geoData.code !== '200' || geoData.location.length === 0) return;
+            const locationId = geoData.location[0].id;
+            
+            // 获取实时天气
+            const weatherResponse = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${apiKey}&lang=zh`);
+            const weatherData = await weatherResponse.json();
+            if (weatherData.code === '200') {
+                document.getElementById('temperature').textContent = `温度: ${weatherData.now.temp}°C`;
+                document.getElementById('humidity').textContent = `湿度: ${weatherData.now.humidity}%`;
+                document.getElementById('wind').textContent = `风向: ${weatherData.now.windDir}`;
+                document.getElementById('pressure').textContent = `气压: ${weatherData.now.pressure} hPa`;
+            }
+            
+            // 获取生活指数
+            const lifeResponse = await fetch(`https://devapi.qweather.com/v7/indices/1d?location=${locationId}&key=${apiKey}&type=3&lang=zh`);
+            const lifeData = await lifeResponse.json();
+            if (lifeData.code === '200') {
+                document.getElementById('uv').textContent = `紫外线指数: ${lifeData.daily[0].category}`;
+            }
+        
+        }
+
+        fetchWeather();
+    </script>
+</body>
+</html>
