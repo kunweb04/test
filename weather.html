@@ -1,135 +1,164 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>马六甲天气</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .weather-container {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        h1 {
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.2em;
-            margin: 10px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>马六甲天气</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .weather-container {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1, h2 {
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 1.1em;
+      margin: 8px 0;
+    }
+    .forecast, .hourly, .alarm {
+      margin-top: 20px;
+      text-align: left;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .forecast-item, .hourly-item {
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding: 5px 0;
+    }
+    .forecast-item:last-child, .hourly-item:last-child {
+      border-bottom: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="weather-container">
-        <h1>马六甲天气</h1>
-        <p id="temperature">温度: 加载中...</p>
-        <p id="feels-like">体感温度: 加载中...</p>
-        <p id="humidity">湿度: 加载中...</p>
-        <p id="wind">风向: 加载中...</p>
-        <p id="wind-speed">风速: 加载中...</p>
-        <p id="pressure">气压: 加载中...</p>
-        <p id="visibility">能见度: 加载中...</p>
-        <p id="air-quality">空气质量: 加载中...</p>
-        <p id="rain">降水情况: 加载中...</p>
-        <p id="warning">天气预警: 加载中...</p>
-        <p id="uv">紫外线指数: 加载中...</p>
-        <p id="sun">日出日落: 加载中...</p>
-        <p id="daily">未来 24 小时天气: 加载中...</p>
-        <p id="weekly">未来 7 天天气: 加载中...</p>
+  <div class="weather-container">
+    <h1>马六甲天气</h1>
+    <!-- 实时天气 -->
+    <p id="temperature">温度: 加载中...</p>
+    <p id="humidity">湿度: 加载中...</p>
+    <p id="wind">风向: 加载中...</p>
+    <p id="pressure">气压: 加载中...</p>
+    <p id="uv">紫外线指数: 加载中...</p>
+    
+    <!-- 三日预报 -->
+    <div class="forecast">
+      <h2>三日预报</h2>
+      <div id="forecastList">加载中...</div>
     </div>
+    
+    <!-- 逐小时预报 -->
+    <div class="hourly">
+      <h2>逐小时预报</h2>
+      <div id="hourlyList">加载中...</div>
+    </div>
+    
+    <!-- 灾害预警 -->
+    <div class="alarm">
+      <h2>灾害预警</h2>
+      <p id="alarmInfo">暂无预警</p>
+    </div>
+  </div>
 
-    <script>
-        const apiKey = 'a8180c40e5a34daebeabe6b8310ec4d4'; 
-        const location = '马六甲';
+  <script>
+    async function fetchWeather() {
+      const apiKey = 'a8180c40e5a34daebeabe6b8310ec4d4'; // 替换为你的API密钥
+      const locationName = '马六甲';
 
-        async function getLocationId() {
-            const geoResponse = await fetch(`https://geoapi.qweather.com/v2/city/lookup?location=${location}&key=${apiKey}`);
-            const geoData = await geoResponse.json();
-            return (geoData.code === '200' && geoData.location.length > 0) ? geoData.location[0].id : null;
-        }
+      // 1. 获取城市ID（Geo API）
+      const geoResponse = await fetch(`https://geoapi.qweather.com/v2/city/lookup?location=${encodeURIComponent(locationName)}&key=${apiKey}`);
+      const geoData = await geoResponse.json();
+      if (geoData.code !== '200' || !geoData.location || geoData.location.length === 0) {
+        console.error('无法获取城市信息');
+        return;
+      }
+      const locationId = geoData.location[0].id;
 
-        async function fetchWeather() {
-            const locationId = await getLocationId();
-            if (!locationId) return;
+      // 2. 获取实时天气数据
+      const nowResponse = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${apiKey}&lang=zh`);
+      const nowData = await nowResponse.json();
+      if (nowData.code === '200' && nowData.now) {
+        document.getElementById('temperature').textContent = `温度: ${nowData.now.temp}°C`;
+        document.getElementById('humidity').textContent = `湿度: ${nowData.now.humidity}%`;
+        document.getElementById('wind').textContent = `风向: ${nowData.now.windDir}`;
+        document.getElementById('pressure').textContent = `气压: ${nowData.now.pressure} hPa`;
+      } else {
+        console.error('实时天气数据获取失败');
+      }
 
-            const urls = {
-                now: `https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${apiKey}&lang=zh`,
-                air: `https://devapi.qweather.com/v7/air/now?location=${locationId}&key=${apiKey}&lang=zh`,
-                rain: `https://devapi.qweather.com/v7/minutely/5m?location=${locationId}&key=${apiKey}&lang=zh`,
-                warning: `https://devapi.qweather.com/v7/warning/now?location=${locationId}&key=${apiKey}&lang=zh`,
-                uv: `https://devapi.qweather.com/v7/indices/1d?location=${locationId}&key=${apiKey}&type=3&lang=zh`,
-                sun: `https://devapi.qweather.com/v7/astronomy/sunmoon?location=${locationId}&key=${apiKey}&lang=zh`,
-                daily: `https://devapi.qweather.com/v7/weather/24h?location=${locationId}&key=${apiKey}&lang=zh`,
-                weekly: `https://devapi.qweather.com/v7/weather/7d?location=${locationId}&key=${apiKey}&lang=zh`
-            };
+      // 3. 获取生活指数（紫外线指数，type=3）
+      const lifeResponse = await fetch(`https://devapi.qweather.com/v7/indices/1d?location=${locationId}&key=${apiKey}&type=3&lang=zh`);
+      const lifeData = await lifeResponse.json();
+      if (lifeData.code === '200' && lifeData.daily && lifeData.daily.length > 0) {
+        document.getElementById('uv').textContent = `紫外线指数: ${lifeData.daily[0].category}`;
+      } else {
+        console.error('生活指数数据获取失败');
+      }
 
-            try {
-                const responses = await Promise.all(Object.values(urls).map(url => fetch(url)));
-                const data = await Promise.all(responses.map(res => res.json()));
+      // 4. 获取三日天气预报
+      const forecastResponse = await fetch(`https://devapi.qweather.com/v7/weather/3d?location=${locationId}&key=${apiKey}&lang=zh`);
+      const forecastData = await forecastResponse.json();
+      if (forecastData.code === '200' && forecastData.daily) {
+        const forecastList = document.getElementById('forecastList');
+        forecastList.innerHTML = '';
+        forecastData.daily.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'forecast-item';
+          // 使用 textDay、textNight、tempMin、tempMax、sunrise、sunset 等字段
+          div.innerHTML = `<strong>${item.fxDate}</strong>：白天 ${item.textDay} / 夜间 ${item.textNight}，温度 ${item.tempMin}°C ~ ${item.tempMax}°C，日出 ${item.sunrise}，日落 ${item.sunset}`;
+          forecastList.appendChild(div);
+        });
+      } else {
+        console.error('预报数据获取失败');
+      }
 
-                // 处理实时天气
-                if (data[0].code === '200') {
-                    document.getElementById('temperature').textContent = `温度: ${data[0].now.temp}°C`;
-                    document.getElementById('feels-like').textContent = `体感温度: ${data[0].now.feelsLike}°C`;
-                    document.getElementById('humidity').textContent = `湿度: ${data[0].now.humidity}%`;
-                    document.getElementById('wind').textContent = `风向: ${data[0].now.windDir}`;
-                    document.getElementById('wind-speed').textContent = `风速: ${data[0].now.windSpeed} km/h`;
-                    document.getElementById('pressure').textContent = `气压: ${data[0].now.pressure} hPa`;
-                    document.getElementById('visibility').textContent = `能见度: ${data[0].now.vis} km`;
-                }
+      // 5. 获取逐小时预报（调用24小时预报接口）
+      const hourlyResponse = await fetch(`https://devapi.qweather.com/v7/weather/24h?location=${locationId}&key=${apiKey}&lang=zh`);
+      const hourlyData = await hourlyResponse.json();
+      if (hourlyData.code === '200' && hourlyData.hourly) {
+        const hourlyList = document.getElementById('hourlyList');
+        hourlyList.innerHTML = '';
+        // 仅显示未来6小时
+        hourlyData.hourly.slice(0, 6).forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'hourly-item';
+          const time = item.fxTime.slice(11, 16);
+          div.textContent = `${time} - ${item.temp}°C，${item.text}`;
+          hourlyList.appendChild(div);
+        });
+      } else {
+        console.error('逐小时预报数据获取失败');
+      }
 
-                // 处理空气质量
-                if (data[1].code === '200') {
-                    document.getElementById('air-quality').textContent = `空气质量: ${data[1].now.category} (PM2.5: ${data[1].now.pm2p5})`;
-                }
+      // 6. 获取灾害预警数据
+      const alarmResponse = await fetch(`https://devapi.qweather.com/v7/alarm?location=${locationId}&key=${apiKey}&lang=zh`);
+      const alarmData = await alarmResponse.json();
+      if (alarmData.code === '200' && alarmData.alarm && alarmData.alarm.length > 0) {
+        const alarm = alarmData.alarm[0];
+        document.getElementById('alarmInfo').textContent = `${alarm.title} - ${alarm.level}（${alarm.type}）`;
+      } else {
+        document.getElementById('alarmInfo').textContent = '暂无预警';
+      }
+    }
 
-                // 处理降水情况
-                if (data[2].code === '200') {
-                    document.getElementById('rain').textContent = `降水: ${data[2].summary}`;
-                }
-
-                // 处理天气预警
-                if (data[3].code === '200' && data[3].warning.length > 0) {
-                    document.getElementById('warning').textContent = `预警: ${data[3].warning[0].text}`;
-                }
-
-                // 处理紫外线指数
-                if (data[4].code === '200') {
-                    document.getElementById('uv').textContent = `紫外线指数: ${data[4].daily[0].category}`;
-                }
-
-                // 处理日出日落
-                if (data[5].code === '200') {
-                    document.getElementById('sun').textContent = `日出: ${data[5].sunrise} | 日落: ${data[5].sunset}`;
-                }
-
-                // 处理 24 小时天气
-                if (data[6].code === '200') {
-                    document.getElementById('daily').textContent = `未来 24 小时: ${data[6].hourly.map(h => `${h.temp}°C`).join(' / ')}`;
-                }
-
-                // 处理 7 天天气
-                if (data[7].code === '200') {
-                    document.getElementById('weekly').textContent = `未来 7 天: ${data[7].daily.map(d => `${d.tempMax}°/${d.tempMin}°C`).join(' | ')}`;
-                }
-            } catch (error) {
-                console.error('获取天气数据失败', error);
-            }
-        }
-
-        fetchWeather();
-    </script>
+    fetchWeather();
+  </script>
 </body>
 </html>
