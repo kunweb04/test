@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUDIMAN ARCHIVE | 音乐遗产数字库</title>
+    <style>
+        :root {
+            --primary: #2A2F4F;
+            --secondary: #917FB3;
+            --accent: #E5BEEC;
+            --text: #FDE2F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(42, 47, 79, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav a:hover {
+            color: var(--secondary);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            background: linear-gradient(45deg, var(--primary) 30%, rgba(42, 47, 79, 0.8)),
+                        url('https://source.unsplash.com/random/1920x1080/?malaysia,music') center/cover;
+            background-blend-mode: multiply;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            max-width: 60%;
+            line-height: 1.2;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .timeline {
+            padding: 5rem 10%;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin: 4rem 0;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: 1s;
+        }
+
+        .timeline-item.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-date {
+            flex: 1;
+            text-align: right;
+            padding-right: 3rem;
+            border-right: 2px solid var(--secondary);
+        }
+
+        .timeline-content {
+            flex: 2;
+            padding-left: 3rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 5rem 10%;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .quote-section {
+            padding: 5rem 10%;
+            text-align: center;
+            font-style: italic;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+                max-width: 100%;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+            }
+
+            .timeline-date {
+                border: none;
+                text-align: left;
+                padding: 0 0 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="logo">SUDIMAN DIGITAL</div>
+        <div class="nav-links">
+            <a href="#home">主页</a>
+            <a href="#timeline">艺术年表</a>
+            <a href="#works">经典作品</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1><span class="gradient-text">1945-1992</span><br>马来西亚之声永恒回响</h1>
+    </section>
+
+    <section class="timeline" id="timeline">
+        <div class="timeline-item">
+            <div class="timeline-date">
+                <h3 class="gradient-text">1958</h3>
+            </div>
+            <div class="timeline-content">
+                <div class="card">
+                    <h3>初露锋芒</h3>
+                    <p>以单曲《Hati Kecil》开启音乐生涯，融合传统班顿诗与现代流行编曲，奠定独特创作风格</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-date">
+                <h3 class="gradient-text">1971</h3>
+            </div>
+            <div class="timeline-content">
+                <div class="card">
+                    <h3>文化大使</h3>
+                    <p>代表马来西亚参加东南亚文化节，创新性地将甘美兰乐器融入流行音乐编排</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card-grid" id="works">
+        <div class="card">
+            <h3 class="gradient-text">《Suara Rakyat》</h3>
+            <p>1975年白金专辑，包含传世经典《Joget Kenangan》，展现对传统舞蹈音乐的现代化诠释</p>
+        </div>
+
+        <div class="card">
+            <h3 class="gradient-text">《Pantun Moden》</h3>
+            <p>1982年实验性作品，将马来四行诗与放克节奏结合，开创"文化融合"音乐流派</p>
+        </div>
+    </section>
+
+    <section class="quote-section">
+        <blockquote>
+            <p class="gradient-text">"音乐是跨越时代的语言，我的创作永远根植于马来西亚的灵魂"</p>
+            <cite>- 苏迪曼</cite>
+        </blockquote>
+    </section>
+
+    <script>
+        // 滚动动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.timeline-item').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 动态背景
+        const hero = document.querySelector('.hero');
+        const backgrounds = [
+            '?malaysia,stage',
+            '?traditional,music',
+            '?vintage,mic',
+            '?concert,lights'
+        ];
+        let currentBg = 0;
+        
+        setInterval(() => {
+            currentBg = (currentBg + 1) % backgrounds.length;
+            hero.style.backgroundImage = 
+                `linear-gradient(45deg, var(--primary) 30%, rgba(42, 47, 79, 0.8)),
+                 url('https://source.unsplash.com/random/1920x1080/${backgrounds[currentBg]}')`;
+        }, 8000);
+    </script>
+</body>
+</html>

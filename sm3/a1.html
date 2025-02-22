@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拿督苏迪曼艺术成就展</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2A3F54;
+            --accent-color: #4A90E2;
+            --text-dark: #2C3E50;
+            --text-light: #FFFFFF;
+            --gradient-bg: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--gradient-bg);
+            line-height: 1.7;
+            color: var(--text-dark);
+            scroll-behavior: smooth;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: var(--text-light);
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .profile {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+            background: var(--text-light);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .profile:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            opacity: 0;
+            animation: fadeIn 1s 0.3s forwards;
+        }
+
+        .profile-content h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+        }
+
+        .profile-content ul {
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .profile-content li {
+            margin-bottom: 0.8rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .profile-content li::before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            left: -0.8rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 4rem 0;
+            margin: 4rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: var(--accent-color);
+            opacity: 0.2;
+        }
+
+        .timeline-item {
+            width: 45%;
+            padding: 2rem;
+            position: relative;
+            margin: 3rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 55%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            top: 1.5rem;
+            left: -10px;
+            border: 4px solid var(--text-light);
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            left: auto;
+            right: -10px;
+        }
+
+        .timeline-content {
+            background: var(--text-light);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--text-light);
+            transform: rotate(45deg);
+            top: 1.5rem;
+            left: -7px;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            left: auto;
+            right: -7px;
+        }
+
+        .timeline-content:hover {
+            transform: translateX(10px);
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 4rem 0;
+        }
+
+        .work-card {
+            background: var(--text-light);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .work-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .work-card-content {
+            padding: 1.5rem;
+        }
+
+        footer {
+            background: var(--primary-color);
+            color: var(--text-light);
+            text-align: center;
+            padding: 3rem;
+            margin-top: 6rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 4rem 1.5rem 3rem;
+                clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+            }
+
+            .profile {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+                gap: 2rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                margin-left: 0 !important;
+                padding: 1rem 0 1rem 40px;
+            }
+
+            .timeline-item::before {
+                left: 0;
+                right: auto;
+            }
+
+            .timeline-content::after {
+                left: -7px;
+                right: auto;
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>拿督苏迪曼艺术成就展</h1>
+        <p>1923 - 1992 | 马来西亚国宝级歌手</p>
+    </header>
+
+    <div class="container">
+        <section class="profile">
+            <img data-src="https://source.unsplash.com/random/300x400/?portrait,malaysia" alt="拿督苏迪曼" class="profile-img">
+            <div class="profile-content">
+                <h2>艺术人生简介</h2>
+                <p>苏迪曼·宾·阿旺（Sudirman bin Arshad），马来西亚国宝级歌手、词曲创作人、表演艺术家。1970年代至1980年代马来流行乐坛最具影响力的代表人物之一，被誉为"亚洲歌王"。</p>
+                <h3>主要成就</h3>
+                <ul>
+                    <li>1976年马来西亚歌唱比赛冠军</li>
+                    <li>1986年获得"拿督"头衔</li>
+                    <li>代表作《Balik Kampung》成为国民经典</li>
+                    <li>首位在伦敦皇家阿尔伯特音乐厅演出的马来西亚歌手</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>1954</h3>
+                    <p>出生于彭亨州关丹市</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>1976</h3>
+                    <p>赢得RTM举办的Bintang RTM歌唱比赛冠军</p>
+                </div>
+            </div>
+        </section>
+
+        <h2 style="text-align: center; margin: 4rem 0 2rem; font-family: 'Playfair Display'">经典作品</h2>
+        <div class="works-grid">
+            <div class="work-card">
+                <img data-src="https://source.unsplash.com/random/400x300/?music,malaysia" alt="作品封面">
+                <div class="work-card-content">
+                    <h3>Balik Kampung</h3>
+                    <p>1978年发行的经典歌曲，成为马来西亚返乡主题的代表作</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 拿督苏迪曼艺术基金会 版权所有</p>
+    </footer>
+
+    <script>
+        // 增强型滚动动画
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.timeline-item, .work-card');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.85) {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // 图片懒加载增强版
+        const lazyLoad = (targets) => {
+            const io = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.onload = () => img.style.opacity = '1';
+                        observer.unobserve(img);
+                    }
+                });
+            }, { rootMargin: '200px' });
+
+            targets.forEach(img => io.observe(img));
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 首图立即加载
+            const profileImg = document.querySelector('.profile-img');
+            profileImg.src = profileImg.dataset.src;
+
+            // 其他图片懒加载
+            const lazyImages = document.querySelectorAll('img[data-src]');
+            lazyLoad(lazyImages);
+
+            // 初始滚动检测
+            animateOnScroll();
+            window.addEventListener('scroll', animateOnScroll);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

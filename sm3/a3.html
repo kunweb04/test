@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苏迪曼音乐传奇 - 纪念展览</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #1a1c22;
+            --secondary: #f4a261;
+            --accent: #e76f51;
+            --text: #e9ecef;
+            --highlight: #2a9d8f;
+        }
+
+        body {
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 28, 34, 0.98);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            padding: 1.2rem 2rem;
+            transition: 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 主视觉区 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1920') center/cover;
+            position: relative;
+            margin-top: 60px;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--accent), var(--highlight));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 生平介绍 */
+        .bio-section {
+            padding: 8rem 2rem;
+            background: linear-gradient(var(--primary), #24262d);
+        }
+
+        .bio-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .bio-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            transition: transform 0.5s;
+        }
+
+        .bio-image:hover {
+            transform: scale(1.03);
+        }
+
+        .bio-text {
+            background: rgba(255,255,255,0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+        }
+
+        .bio-text h2 {
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+        }
+
+        .bio-facts {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .bio-facts li {
+            padding: 1rem;
+            margin: 1rem 0;
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* 时间轴 */
+        .modern-timeline {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .timeline-road {
+            position: absolute;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--highlight), var(--accent));
+            transform: translateX(-50%);
+        }
+
+        .modern-timeline-item {
+            width: calc(50% - 60px);
+            padding: 2.5rem;
+            background: rgba(255,255,255,0.06);
+            border-radius: 20px;
+            margin: 3rem 0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: 0.6s;
+            backdrop-filter: blur(8px);
+        }
+
+        .modern-timeline-item:nth-child(odd) {
+            margin-left: auto;
+        }
+
+        .modern-timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .modern-timeline-item:nth-child(odd)::before {
+            right: -42px;
+        }
+
+        .modern-timeline-item:nth-child(even)::before {
+            left: -42px;
+        }
+
+        .modern-timeline-item.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 专辑展示 */
+        .enhanced-gallery {
+            padding: 6rem 2rem;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .album-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            padding: 2rem;
+        }
+
+        .enhanced-album-card {
+            background: rgba(255,255,255,0.06);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .enhanced-album-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .album-image {
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .album-hover-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            transform: translateY(100%);
+            transition: 0.4s;
+        }
+
+        .enhanced-album-card:hover .album-hover-content {
+            transform: translateY(0);
+        }
+
+        .album-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--highlight);
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .bio-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .modern-timeline-item {
+                width: 100%;
+                margin: 2rem 0 !important;
+            }
+
+            .modern-timeline-item::before {
+                display: none;
+            }
+
+            .timeline-road {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="#about">生平事迹</a>
+            <a href="#timeline">艺术历程</a>
+            <a href="#works">经典专辑</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>SUDIMAN<br>永恒之声</h1>
+            <p>1950-1992 | 马来西亚音乐传奇</p>
+        </div>
+    </section>
+
+    <section id="about" class="bio-section">
+        <div class="bio-container">
+            <img src="sudiman-portrait.jpg" alt="苏迪曼肖像" class="bio-image">
+            <div class="bio-text">
+                <h2>音乐人生</h2>
+                <p>苏迪曼（Sudirman Haji Arshad），马来西亚国宝级歌手、词曲创作人及演员。以其充满感染力的舞台表演和深刻的社会关怀歌词著称，被誉为"大马歌王"。他的音乐融合传统与现代元素，作品至今仍在东南亚地区广为传唱。</p>
+                <ul class="bio-facts">
+                    <li>🎵 创作超过200首经典歌曲</li>
+                    <li>🏆 7次荣获马来西亚音乐大奖</li>
+                    <li>🌍 首位在英国皇家阿尔伯特音乐厅演出的亚洲歌手</li>
+                    <li>📀 全球唱片销量突破500万张</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="modern-timeline" id="timeline">
+        <div class="timeline-road"></div>
+        
+        <div class="modern-timeline-item">
+            <h3>1976 - 初试啼声</h3>
+            <p>在RTM电视台举办的"Bintang RTM"歌唱比赛中夺冠，正式开启音乐生涯</p>
+        </div>
+
+        <div class="modern-timeline-item">
+            <h3>1980 - 首张专辑</h3>
+            <p>发行首张个人专辑《Aku Penghiburmu》，创下马来西亚本土唱片销售记录</p>
+        </div>
+
+        <div class="modern-timeline-item">
+            <h3>1986 - 国际舞台</h3>
+            <p>受邀参加伦敦亚洲音乐节，成为首位在欧洲举办专场演唱会的马来西亚歌手</p>
+        </div>
+
+        <div class="modern-timeline-item">
+            <h3>1989 - 世纪金曲</h3>
+            <p>创作爱国歌曲《Malaysia Berjaya》成为国庆庆典经典曲目</p>
+        </div>
+    </section>
+
+    <section id="works" class="enhanced-gallery">
+        <div class="album-container">
+            <div class="enhanced-album-card">
+                <div class="album-badge">钻石认证</div>
+                <div class="album-image" style="background-image: url('album1.jpg')"></div>
+                <div class="album-hover-content">
+                    <h4>城市民谣 (1985)</h4>
+                    <p>包含经典曲目《吉隆坡之夜》</p>
+                    <button class="play-button">▶ 试听片段</button>
+                </div>
+            </div>
+
+            <div class="enhanced-album-card">
+                <div class="album-badge">双白金</div>
+                <div class="album-image" style="background-image: url('album2.jpg')"></div>
+                <div class="album-hover-content">
+                    <h4>乡愁记忆 (1988)</h4>
+                    <p>荣获年度最佳传统音乐专辑</p>
+                    <button class="play-button">▶ 试听片段</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 导航栏交互
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            nav.style.background = window.scrollY > 100 
+                ? 'rgba(26, 28, 34, 0.98)' 
+                : 'rgba(26, 28, 34, 0.95)';
+        });
+
+        // 时间轴动画
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transitionDelay = `${entry.target.dataset.delay}ms`;
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.modern-timeline-item').forEach((el, index) => {
+            el.dataset.delay = index * 200;
+            timelineObserver.observe(el);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // 专辑播放交互
+        document.querySelectorAll('.play-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 此处可添加音频播放逻辑
+                const albumTitle = e.target.closest('.enhanced-album-card').querySelector('h4').textContent;
+                alert(`即将播放 ${albumTitle} 的精选片段`);
+            });
+        });
+
+        // 图片懒加载
+        const lazyLoadObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    lazyLoadObserver.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-src]').forEach(img => {
+            lazyLoadObserver.observe(img);
+        });
+    </script>
+</body>
+</html>
